@@ -28,23 +28,16 @@
                         </select>
                     </div>
                     
-                    <!-- Input Level Meter -->
+                    <!-- Input Level Meters (Stereo) -->
                     <div class="level-meter-container">
                         <div class="level-meter">
-                            <div class="meter-label">INPUT LEVEL</div>
                             <div class="meter-bar">
-                                <div class="meter-fill" id="inputMeter"></div>
-                                <div class="meter-scale">
-                                    <span class="scale-mark" style="left: 0%">-60</span>
-                                    <span class="scale-mark" style="left: 25%">-40</span>
-                                    <span class="scale-mark" style="left: 50%">-20</span>
-                                    <span class="scale-mark" style="left: 75%">-10</span>
-                                    <span class="scale-mark" style="left: 90%">-3</span>
-                                    <span class="scale-mark" style="left: 100%">0</span>
-                                </div>
+                                <div class="meter-fill" id="inputMeterL"></div>
                             </div>
-                            <div class="db-display">
-                                <span id="inputDbLevel">-∞ dB</span>
+                        </div>
+                        <div class="level-meter">
+                            <div class="meter-bar">
+                                <div class="meter-fill" id="inputMeterR"></div>
                             </div>
                         </div>
                     </div>
@@ -60,12 +53,11 @@
                         </select>
                     </div>
                     
-                    <!-- Output Level Meter -->
+                    <!-- Output Level Meters (Stereo) -->
                     <div class="level-meter-container">
                         <div class="level-meter">
-                            <div class="meter-label">OUTPUT LEVEL</div>
                             <div class="meter-bar">
-                                <div class="meter-fill" id="outputMeter"></div>
+                                <div class="meter-fill" id="outputMeterL"></div>
                                 <div class="meter-scale">
                                     <span class="scale-mark" style="left: 0%">-60</span>
                                     <span class="scale-mark" style="left: 25%">-40</span>
@@ -75,8 +67,18 @@
                                     <span class="scale-mark" style="left: 100%">0</span>
                                 </div>
                             </div>
-                            <div class="db-display">
-                                <span id="outputDbLevel">-∞ dB</span>
+                        </div>
+                        <div class="level-meter">
+                            <div class="meter-bar">
+                                <div class="meter-fill" id="outputMeterR"></div>
+                                <div class="meter-scale">
+                                    <span class="scale-mark" style="left: 0%">-60</span>
+                                    <span class="scale-mark" style="left: 25%">-40</span>
+                                    <span class="scale-mark" style="left: 50%">-20</span>
+                                    <span class="scale-mark" style="left: 75%">-10</span>
+                                    <span class="scale-mark" style="left: 90%">-3</span>
+                                    <span class="scale-mark" style="left: 100%">0</span>
+                                </div>
                             </div>
                         </div>
                     </div>

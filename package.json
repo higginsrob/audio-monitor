@@ -4,7 +4,8 @@
   "description": "A web-based audio monitoring interface with input/output selection and decibel meter",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "dev": "node index.js --browser"
   },
   "keywords": [
     "audio",

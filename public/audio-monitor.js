@@ -2,8 +2,11 @@ class AudioMonitor {
     constructor() {
         this.audioContext = null;
         this.mediaStream = null;
-        this.analyser = null;
-        this.dataArray = null;
+        this.analyserL = null;
+        this.analyserR = null;
+        this.dataArrayL = null;
+        this.dataArrayR = null;
+        this.splitter = null;
         this.isMonitoring = false;
         this.outputDevice = null;
         this.gainNode = null;
@@ -19,10 +22,12 @@ class AudioMonitor {
             outputSelect: document.getElementById('outputSelect'),
             startBtn: document.getElementById('startBtn'),
             stopBtn: document.getElementById('stopBtn'),
-            inputMeter: document.getElementById('inputMeter'),
-            outputMeter: document.getElementById('outputMeter'),
-            inputDbLevel: document.getElementById('inputDbLevel'),
-            outputDbLevel: document.getElementById('outputDbLevel'),
+            inputMeterL: document.getElementById('inputMeterL'),
+            inputMeterR: document.getElementById('inputMeterR'),
+            outputMeterL: document.getElementById('outputMeterL'),
+            outputMeterR: document.getElementById('outputMeterR'),
+            inputDbLevelL: document.getElementById('inputDbLevelL'),
+            inputDbLevelR: document.getElementById('inputDbLevelR'),
             volumeSlider: document.getElementById('volumeSlider'),
             volumeValue: document.getElementById('volumeValue'),
             statusDot: document.getElementById('statusDot'),
@@ -107,10 +112,12 @@ class AudioMonitor {
             // Create audio context
             this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
             
-            // Get user media with selected device
+            // Get user media with selected device - STEREO
             const constraints = {
                 audio: {
                     deviceId: selectedInputId ? { exact: selectedInputId } : undefined,
+                    channelCount: 2,
+                    sampleRate: 48000,
                     echoCancellation: false,
                     noiseSuppression: false,
                     autoGainControl: false
@@ -119,22 +126,30 @@ class AudioMonitor {
 
             this.mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
             
-            // Create audio nodes
+            // Create audio nodes for stereo processing
             const source = this.audioContext.createMediaStreamSource(this.mediaStream);
-            this.analyser = this.audioContext.createAnalyser();
+            this.splitter = this.audioContext.createChannelSplitter(2);
+            this.analyserL = this.audioContext.createAnalyser();
+            this.analyserR = this.audioContext.createAnalyser();
             this.gainNode = this.audioContext.createGain();
             
-            // Configure analyser
-            this.analyser.fftSize = 1024;
-            this.analyser.smoothingTimeConstant = 0.3;
-            this.dataArray = new Uint8Array(this.analyser.frequencyBinCount);
+            // Configure analysers
+            this.analyserL.fftSize = 1024;
+            this.analyserL.smoothingTimeConstant = 0.3;
+            this.analyserR.fftSize = 1024;
+            this.analyserR.smoothingTimeConstant = 0.3;
+            this.dataArrayL = new Uint8Array(this.analyserL.frequencyBinCount);
+            this.dataArrayR = new Uint8Array(this.analyserR.frequencyBinCount);
             
             // Set initial gain
             this.gainNode.gain.value = this.elements.volumeSlider.value / 100;
             
-            // Connect nodes
-            source.connect(this.analyser);
-            this.analyser.connect(this.gainNode);
+            // Connect nodes for stereo processing
+            source.connect(this.splitter);
+            this.splitter.connect(this.analyserL, 0); // Left channel
+            this.splitter.connect(this.analyserR, 1); // Right channel
+            this.analyserL.connect(this.gainNode);
+            this.analyserR.connect(this.gainNode);
             this.gainNode.connect(this.audioContext.destination);
             
             // Update UI
@@ -166,15 +181,18 @@ class AudioMonitor {
             this.audioContext = null;
         }
         
-        this.analyser = null;
+        this.analyserL = null;
+        this.analyserR = null;
+        this.splitter = null;
         this.gainNode = null;
-        this.dataArray = null;
+        this.dataArrayL = null;
+        this.dataArrayR = null;
         
         // Reset meters
-        this.elements.inputMeter.style.width = '0%';
-        this.elements.outputMeter.style.width = '0%';
-        this.elements.inputDbLevel.textContent = '-∞ dB';
-        this.elements.outputDbLevel.textContent = '-∞ dB';
+        this.elements.inputMeterL.style.width = '0%';
+        this.elements.inputMeterR.style.width = '0%';
+        this.elements.outputMeterL.style.width = '0%';
+        this.elements.outputMeterR.style.width = '0%';
         
         // Update UI
         this.elements.startBtn.disabled = false;
@@ -183,47 +201,52 @@ class AudioMonitor {
     }
 
     animateMeters() {
-        if (!this.isMonitoring || !this.analyser) return;
+        if (!this.isMonitoring || !this.analyserL || !this.analyserR) return;
         
-        // Get frequency data
-        this.analyser.getByteFrequencyData(this.dataArray);
+        // Get frequency data for both channels
+        this.analyserL.getByteFrequencyData(this.dataArrayL);
+        this.analyserR.getByteFrequencyData(this.dataArrayR);
         
-        // Calculate RMS (Root Mean Square) for more accurate volume representation
-        let sum = 0;
-        for (let i = 0; i < this.dataArray.length; i++) {
-            sum += this.dataArray[i] * this.dataArray[i];
+        // Calculate RMS for left channel
+        let sumL = 0;
+        for (let i = 0; i < this.dataArrayL.length; i++) {
+            sumL += this.dataArrayL[i] * this.dataArrayL[i];
         }
-        const rms = Math.sqrt(sum / this.dataArray.length);
+        const rmsL = Math.sqrt(sumL / this.dataArrayL.length);
+        
+        // Calculate RMS for right channel
+        let sumR = 0;
+        for (let i = 0; i < this.dataArrayR.length; i++) {
+            sumR += this.dataArrayR[i] * this.dataArrayR[i];
+        }
+        const rmsR = Math.sqrt(sumR / this.dataArrayR.length);
         
         // Convert to decibels
-        const db = rms > 0 ? 20 * Math.log10(rms / 255) : -Infinity;
+        const dbL = rmsL > 0 ? 20 * Math.log10(rmsL / 255) : -Infinity;
+        const dbR = rmsR > 0 ? 20 * Math.log10(rmsR / 255) : -Infinity;
         
-        // Update input meter
-        this.updateMeter(this.elements.inputMeter, this.elements.inputDbLevel, db);
+        // Update input meters
+        this.updateMeter(this.elements.inputMeterL, dbL);
+        this.updateMeter(this.elements.inputMeterR, dbR);
         
-        // For output, we'll use the same value adjusted by gain
+        // For output, adjust by gain value
         const gainValue = this.gainNode ? this.gainNode.gain.value : 1;
-        const outputDb = db + (20 * Math.log10(gainValue));
-        this.updateMeter(this.elements.outputMeter, this.elements.outputDbLevel, outputDb);
+        const outputDbL = dbL + (20 * Math.log10(gainValue));
+        const outputDbR = dbR + (20 * Math.log10(gainValue));
+        this.updateMeter(this.elements.outputMeterL, outputDbL);
+        this.updateMeter(this.elements.outputMeterR, outputDbR);
         
         // Continue animation
         requestAnimationFrame(() => this.animateMeters());
     }
 
-    updateMeter(meterElement, dbElement, db) {
+    updateMeter(meterElement, db) {
         // Convert dB to percentage (assuming -60dB to 0dB range)
         const minDb = -45;
         const maxDb = 0;
         const percentage = Math.max(0, Math.min(100, ((db - minDb) / (maxDb - minDb)) * 100));
         
         meterElement.style.width = `${percentage}%`;
-        
-        // Update dB display
-        if (db === -Infinity) {
-            dbElement.textContent = '-∞ dB';
-        } else {
-            dbElement.textContent = `${db.toFixed(1)} dB`;
-        }
         
         // Add visual effects for high levels
         if (db > -10) {

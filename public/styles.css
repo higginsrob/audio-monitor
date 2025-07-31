@@ -124,6 +124,13 @@ main {
     border-radius: 8px;
     padding: 20px;
     border: 1px solid #444;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.level-meter {
+    flex: 1;
 }
 
 .meter-label {
@@ -142,7 +149,6 @@ main {
     border-radius: 15px;
     overflow: hidden;
     border: 2px solid #333;
-    margin-bottom: 10px;
 }
 
 .meter-fill {
@@ -168,39 +174,6 @@ main {
     height: 100%;
     background: rgba(255, 255, 255, 0.8);
     border-radius: 0 13px 13px 0;
-}
-
-.meter-scale {
-    position: absolute;
-    top: -18px;
-    left: 0;
-    right: 0;
-    height: 15px;
-}
-
-.scale-mark {
-    position: absolute;
-    font-size: 10px;
-    color: #888;
-    transform: translateX(-50%);
-}
-
-.db-display {
-    text-align: center;
-    margin-top: 10px;
-}
-
-.db-display span {
-    background: #000;
-    color: #00ff00;
-    padding: 8px 16px;
-    border-radius: 4px;
-    font-family: 'Courier New', monospace;
-    font-size: 16px;
-    font-weight: bold;
-    border: 1px solid #333;
-    min-width: 80px;
-    display: inline-block;
 }
 
 /* Controls */
