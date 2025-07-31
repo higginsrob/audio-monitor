@@ -1,6 +1,6 @@
 {
   "name": "audio-monitor",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A web-based audio monitoring interface with input/output selection and decibel meter",
   "main": "index.js",
   "scripts": {
