@@ -1,0 +1,349 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    color: #e0e0e0;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: #333333;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    overflow: hidden;
+}
+
+header {
+    background: linear-gradient(90deg, #404040 0%, #505050 100%);
+    padding: 20px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #555;
+}
+
+header h1 {
+    color: #ffffff;
+    font-size: 2.2em;
+    font-weight: 300;
+    letter-spacing: 2px;
+}
+
+.status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+}
+
+.status-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #ff4444;
+    transition: background-color 0.3s ease;
+}
+
+.status-dot.connected {
+    background: #44ff44;
+}
+
+main {
+    padding: 30px;
+}
+
+.control-panel {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 40px;
+}
+
+.section {
+    background: #2a2a2a;
+    border-radius: 8px;
+    padding: 25px;
+    border: 1px solid #444;
+}
+
+.section h2 {
+    color: #ffffff;
+    margin-bottom: 20px;
+    font-size: 1.4em;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.device-selector {
+    margin-bottom: 30px;
+}
+
+.device-selector label {
+    display: block;
+    margin-bottom: 8px;
+    color: #cccccc;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.device-select {
+    width: 100%;
+    padding: 12px 15px;
+    background: #1a1a1a;
+    border: 2px solid #555;
+    border-radius: 6px;
+    color: #e0e0e0;
+    font-size: 14px;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+}
+
+.device-select:focus {
+    outline: none;
+    border-color: #007acc;
+}
+
+.device-select option {
+    background: #1a1a1a;
+    color: #e0e0e0;
+}
+
+/* Level Meters */
+.level-meter-container {
+    background: #1a1a1a;
+    border-radius: 8px;
+    padding: 20px;
+    border: 1px solid #444;
+}
+
+.meter-label {
+    color: #cccccc;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 15px;
+    letter-spacing: 1px;
+}
+
+.meter-bar {
+    position: relative;
+    height: 30px;
+    background: #0d1117;
+    border-radius: 15px;
+    overflow: hidden;
+    border: 2px solid #333;
+    margin-bottom: 10px;
+}
+
+.meter-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, 
+        #00ff00 0%, 
+        #88ff00 40%, 
+        #ffff00 70%, 
+        #ff8800 85%, 
+        #ff0000 100%);
+    border-radius: 13px;
+    transition: width 0.1s ease-out;
+    position: relative;
+}
+
+.meter-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 3px;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 0 13px 13px 0;
+}
+
+.meter-scale {
+    position: absolute;
+    top: -18px;
+    left: 0;
+    right: 0;
+    height: 15px;
+}
+
+.scale-mark {
+    position: absolute;
+    font-size: 10px;
+    color: #888;
+    transform: translateX(-50%);
+}
+
+.db-display {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.db-display span {
+    background: #000;
+    color: #00ff00;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 16px;
+    font-weight: bold;
+    border: 1px solid #333;
+    min-width: 80px;
+    display: inline-block;
+}
+
+/* Controls */
+.controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding: 25px;
+    background: #2a2a2a;
+    border-radius: 8px;
+    border: 1px solid #444;
+    flex-wrap: wrap;
+}
+
+.control-btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 140px;
+}
+
+.control-btn.primary {
+    background: #007acc;
+    color: white;
+}
+
+.control-btn.primary:hover:not(:disabled) {
+    background: #005999;
+    transform: translateY(-2px);
+}
+
+.control-btn.secondary {
+    background: #666;
+    color: white;
+}
+
+.control-btn.secondary:hover:not(:disabled) {
+    background: #555;
+    transform: translateY(-2px);
+}
+
+.control-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.volume-control {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-left: 40px;
+}
+
+.volume-control label {
+    color: #cccccc;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.volume-slider {
+    width: 150px;
+    height: 6px;
+    background: #444;
+    border-radius: 3px;
+    outline: none;
+    cursor: pointer;
+}
+
+.volume-slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    background: #007acc;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.volume-slider::-webkit-slider-thumb:hover {
+    background: #005999;
+}
+
+.volume-slider::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    background: #007acc;
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+}
+
+#volumeValue {
+    color: #cccccc;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    font-weight: bold;
+    min-width: 40px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .control-panel {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .controls {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .volume-control {
+        margin-left: 0;
+        justify-content: center;
+    }
+    
+    header {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+    
+    header h1 {
+        font-size: 1.8em;
+    }
+}
+
+/* Animation for meter movement */
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.7; }
+    100% { opacity: 1; }
+}
+
+.meter-fill.active {
+    animation: pulse 0.5s ease-in-out infinite;
+}

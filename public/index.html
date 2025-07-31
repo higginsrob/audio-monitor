@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Monitor</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Audio Monitor</h1>
+            <div class="status-indicator">
+                <span class="status-dot" id="statusDot"></span>
+                <span id="statusText">Disconnected</span>
+            </div>
+        </header>
+
+        <main>
+            <div class="control-panel">
+                <!-- Input Section -->
+                <div class="section input-section">
+                    <h2>Audio Input</h2>
+                    <div class="device-selector">
+                        <label for="inputSelect">Input Device:</label>
+                        <select id="inputSelect" class="device-select">
+                            <option value="">Select Input Device...</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Input Level Meter -->
+                    <div class="level-meter-container">
+                        <div class="level-meter">
+                            <div class="meter-label">INPUT LEVEL</div>
+                            <div class="meter-bar">
+                                <div class="meter-fill" id="inputMeter"></div>
+                                <div class="meter-scale">
+                                    <span class="scale-mark" style="left: 0%">-60</span>
+                                    <span class="scale-mark" style="left: 25%">-40</span>
+                                    <span class="scale-mark" style="left: 50%">-20</span>
+                                    <span class="scale-mark" style="left: 75%">-10</span>
+                                    <span class="scale-mark" style="left: 90%">-3</span>
+                                    <span class="scale-mark" style="left: 100%">0</span>
+                                </div>
+                            </div>
+                            <div class="db-display">
+                                <span id="inputDbLevel">-∞ dB</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Output Section -->
+                <div class="section output-section">
+                    <h2>Audio Output</h2>
+                    <div class="device-selector">
+                        <label for="outputSelect">Output Device:</label>
+                        <select id="outputSelect" class="device-select">
+                            <option value="">Select Output Device...</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Output Level Meter -->
+                    <div class="level-meter-container">
+                        <div class="level-meter">
+                            <div class="meter-label">OUTPUT LEVEL</div>
+                            <div class="meter-bar">
+                                <div class="meter-fill" id="outputMeter"></div>
+                                <div class="meter-scale">
+                                    <span class="scale-mark" style="left: 0%">-60</span>
+                                    <span class="scale-mark" style="left: 25%">-40</span>
+                                    <span class="scale-mark" style="left: 50%">-20</span>
+                                    <span class="scale-mark" style="left: 75%">-10</span>
+                                    <span class="scale-mark" style="left: 90%">-3</span>
+                                    <span class="scale-mark" style="left: 100%">0</span>
+                                </div>
+                            </div>
+                            <div class="db-display">
+                                <span id="outputDbLevel">-∞ dB</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Controls -->
+            <div class="controls">
+                <button id="startBtn" class="control-btn primary">Start Monitoring</button>
+                <button id="stopBtn" class="control-btn secondary" disabled>Stop Monitoring</button>
+                <div class="volume-control">
+                    <label for="volumeSlider">Output Volume:</label>
+                    <input type="range" id="volumeSlider" min="0" max="100" value="100" class="volume-slider">
+                    <span id="volumeValue">100%</span>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="audio-monitor.js"></script>
+</body>
+</html>
